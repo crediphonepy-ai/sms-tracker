@@ -691,4 +691,4 @@ setInterval(loadMetrics, 15000);
 app.get("/health", (req, res) => res.json({ ok: true, contacts: Object.keys(contacts).length, blastRunning: blastState.running }));
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(\`🚀 SMS Tracker corriendo en puerto \${PORT}\`));
+app.listen(PORT, () => console.log("🚀 SMS Tracker corriendo en puerto " + PORT));
