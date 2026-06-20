@@ -286,10 +286,10 @@ app.get("/", (req, res) => {
 </div>
 
 <div class="tabs">
-  <button class="tab active" onclick="switchTab('envio',this)">✉ ENVIAR</button>
-  <button class="tab" onclick="switchTab('metricas',this)">📊 MÉTRICAS</button>
-  <button class="tab" onclick="switchTab('contactos',this)">👥 CONTACTOS</button>
-  <button class="tab" onclick="switchTab('logs',this)">📋 LOGS</button>
+<button class="tab active" id="tab-btn-envio" onclick="switchTab('envio')">✉ ENVIAR</button>
+<button class="tab" id="tab-btn-metricas" onclick="switchTab('metricas')">📊 MÉTRICAS</button>
+<button class="tab" id="tab-btn-contactos" onclick="switchTab('contactos')">👥 CONTACTOS</button>
+<button class="tab" id="tab-btn-logs" onclick="switchTab('logs')">📋 LOGS</button>
 </div>
 
 <div class="content">
@@ -446,9 +446,9 @@ const TEMPLATES = {
 function switchTab(tab, el) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  el.classList.add('active');
+  if (el) el.classList.add('active');
+  else document.querySelector('[onclick*="' + tab + '"]').classList.add('active');
   document.getElementById('tab-'+tab).classList.add('active');
-  if (['metricas','contactos','logs'].includes(tab)) loadMetrics();
 }
 
 function setTemplate(key) {
