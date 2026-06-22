@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const fetch = require("node-fetch");
 const crypto = require("crypto");
+const SHEETS_WEBHOOK = process.env.SHEETS_WEBHOOK;
 
 const app = express();
 app.use(cors());
@@ -27,6 +28,21 @@ app.get("/c/:linkId", (req, res) => {
     contact.clicked = true;
     contact.clickedAt = now();
     clicks.push({ ts: now(), name: contact.name, phone: contact.phone });
+    
+    if (SHEETS_WEBHOOK) {
+  fetch(SHEETS_WEBHOOK, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      linkId: contact.linkId,
+      evento: "CLICK",
+      detalle: contact.phone
+    })
+  }).catch(err => console.error("Sheets Error:", err));
+}
+    
     console.log("CLICK: " + contact.name);
   }
   res.redirect(302, process.env.CATALOG_URL || "https://wa.me/595992401579");
