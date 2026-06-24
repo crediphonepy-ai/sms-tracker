@@ -11,7 +11,7 @@ app.use(express.json());
 const SMS_USER = process.env.SMS_USER || "CLXHSQ";
 const SMS_PASS = process.env.SMS_PASS || "g6qz0njve0masq";
 const SMS_API  = "https://api.sms-gate.app/3rdparty/v1";
-const BASE_URL = process.env.BASE_URL || "https://sms-tracker-production.up.railway.app";
+const BASE_URL = process.env.BASE_URL || "https://crediphone.up.railway.app";
 
 let contacts = {};
 let clicks   = [];
