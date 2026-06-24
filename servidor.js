@@ -124,7 +124,8 @@ app.post("/api/sms/blast", async (req, res) => {
       const contact = targets[i];
       blastState.current = contact.name;
       const trackUrl = BASE_URL + "/c/" + contact.linkId;
-      const finalMsg = message + " " + trackUrl;
+      const enableTracker = process.env.ENABLE_TRACKER !== "false";
+      const finalMsg = enableTracker ? message + " " + trackUrl : message;
 
       try {
         const response = await fetch(SMS_API + "/message", {
