@@ -2,11 +2,14 @@ const express = require("express");
 const cors = require("cors");
 const fetch = require("node-fetch");
 const crypto = require("crypto");
+const path = require("path");
 const SHEETS_WEBHOOK = process.env.SHEETS_WEBHOOK;
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+app.use(express.static(path.join(__dirname, "public")));
 
 const SMS_USER = process.env.SMS_USER || "CLXHSQ";
 const SMS_PASS = process.env.SMS_PASS || "g6qz0njve0masq";
