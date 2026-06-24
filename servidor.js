@@ -168,7 +168,7 @@ app.post("/api/sms/blast", async (req, res) => {
 app.get("/health", (req, res) => res.json({ ok: true }));
 
 // Panel HTML
-app.get("/", (req, res) => {
+app.get("/panel", (req, res) => {
   const lines = [
     '<!DOCTYPE html>',
     '<html lang="es">',
