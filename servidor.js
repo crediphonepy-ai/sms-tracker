@@ -114,7 +114,7 @@ app.get("/api/blast/status", (req, res) => res.json(blastState));
 // Envio masivo
 app.post("/api/sms/blast", async (req, res) => {
   if (blastState.running) return res.status(400).json({ error: "Ya hay un blast en curso" });
-  const { message, delaySeconds = 60 } = req.body;
+  const { message, delaySeconds = 60, useTracking = true } = req.body;
   if (!message) return res.status(400).json({ error: "Sin mensaje" });
   const targets = Object.values(contacts).filter(c => !c.smsSent);
   if (!targets.length) return res.status(400).json({ error: "Sin contactos pendientes" });
@@ -127,8 +127,7 @@ app.post("/api/sms/blast", async (req, res) => {
       const contact = targets[i];
       blastState.current = contact.name;
       const trackUrl = BASE_URL + "/c/" + contact.linkId;
-      const enableTracker = process.env.ENABLE_TRACKER !== "false";
-      const finalMsg = enableTracker ? message + " " + trackUrl : message;
+      const finalMsg = useTracking ? message + " " + trackUrl : message;
 
       try {
         const response = await fetch(SMS_API + "/message", {
@@ -260,6 +259,11 @@ app.get("/panel", (req, res) => {
     '<div>',
     '<div class="lbl">DELAY ENTRE SMS (seg)</div>',
     '<input type="number" id="delaySeconds" value="60" min="30" max="300" style="width:100%;background:#0a0b0d;border:1px solid #22272f;border-radius:4px;padding:10px 12px;color:#e8eaf0;font-family:inherit;font-size:13px">',
+    '<div class="lbl" style="margin-top:12px">TIPO DE LINK</div>',
+    '<select id="useTracking" style="width:100%;background:#0a0b0d;border:1px solid #22272f;border-radius:4px;padding:10px 12px;color:#e8eaf0;font-family:inherit;font-size:13px">',
+    '<option value="true">Con tracking</option>',
+    '<option value="false">Sin tracking</option>',
+    '</select>',
     '</div>',
     '<div id="blastAlert"></div>',
     '</div>',
@@ -333,7 +337,8 @@ app.get("/panel", (req, res) => {
     '  var msg = document.getElementById("smsMsg").value.trim();',
     '  if(!msg){alert("Escribi el mensaje primero");return;}',
     '  var delay = parseInt(document.getElementById("delaySeconds").value)||60;',
-    '  fetch(BASE+"/api/sms/blast",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:msg,delaySeconds:delay})})',
+    '  var useTracking = document.getElementById("useTracking").value === "true";',
+    '  fetch(BASE+"/api/sms/blast",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:msg,delaySeconds:delay,useTracking:useTracking})})',
     '  .then(function(r){return r.json();}).then(function(d){',
     '    if(!d.ok){document.getElementById("blastAlert").innerHTML="<div class=\'alert alert-err\'>"+d.error+"</div>";return;}',
     '    document.getElementById("blastAlert").innerHTML="<div class=\'alert alert-ok\'>Campana iniciada: "+d.queued+" SMS - ~"+d.estimatedMinutes+" min estimados</div>";',
@@ -354,7 +359,7 @@ app.get("/panel", (req, res) => {
     '  .then(function(cs){',
     '    var c = cs.find(function(x){return x.phone===phone;});',
     '    if(!c){alert("Error");return;}',
-    '    return fetch(BASE+"/api/sms/blast",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:msg,delaySeconds:5})})',
+    '    return fetch(BASE+"/api/sms/blast",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:msg,delaySeconds:5,useTracking:document.getElementById("useTracking").value==="true"})})',
     '    .then(function(r){return r.json();}).then(function(d){',
     '      document.getElementById("blastAlert").innerHTML = d.ok ? "<div class=\'alert alert-ok\'>SMS de prueba enviado a "+phone+"</div>" : "<div class=\'alert alert-err\'>Error al enviar</div>";',
     '    });',
