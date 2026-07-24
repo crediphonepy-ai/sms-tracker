@@ -2,12 +2,10 @@ const express = require("express");
 const cors = require("cors");
 const fetch = require("node-fetch");
 const crypto = require("crypto");
-const path = require("path");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
 
 // ── Config desde variables de entorno ─────────────────────────────────────────
 const SMS_USER = process.env.SMS_USER || "CLXHSQ";
@@ -196,7 +194,7 @@ app.get("/api/metrics", (req, res) => {
 });
 
 // ── PANEL HTML ────────────────────────────────────────────────────────────────
-app.get("/panel", (req, res) => {
+app.get("/", (req, res) => {
   res.send(`<!DOCTYPE html>
 <html lang="es">
 <head>
