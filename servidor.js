@@ -13,7 +13,7 @@ app.use(express.static(path.join(__dirname, "public")));
 const SMS_USER = process.env.SMS_USER || "CLXHSQ";
 const SMS_PASS = process.env.SMS_PASS || "g6qz0njve0masq";
 const SMS_API  = "https://api.sms-gate.app/3rdparty/v1";
-const BASE_URL = process.env.BASE_URL || "https://tu-app.onrender.com";
+const BASE_URL = process.env.BASE_URL || "https://crediphonepy.onrender.com";
 
 // ── Base de datos en memoria ──────────────────────────────────────────────────
 const contacts = {};
